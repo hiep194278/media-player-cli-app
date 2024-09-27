@@ -1,0 +1,34 @@
+# Ignore build directory and compiled files
+/build/
+/*.o
+/*.out
+/*.exe
+/*.a
+/*.so
+/*.dylib
+
+# Ignore executable
+/media_player_app
+
+# Ignore editor and IDE specific files
+*.swp
+*.swo
+*.DS_Store
+.idea/
+.vscode/
+*.log
+
+# Ignore backups and temporary files
+*~
+*.bak
+*.tmp
+
+# Ignore generated files
+*.gch
+*.d
+
+# Ignore CMake files if applicable
+# CMakeFiles/
+# CMakeCache.txt
+# cmake_install.cmake
+# Makefile
