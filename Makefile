@@ -16,7 +16,7 @@ SRCS := $(wildcard $(SRC_DIR)/*.cpp)   \
 OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 
 # Executable
-TARGET := media_player_app
+TARGET := media_player_cli_app
 
 # Default target
 all: $(TARGET)
