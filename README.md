@@ -1,4 +1,4 @@
-# Media Player Application
+# Media Player CLI Application
 
 This project is a C++ media player application. The following instructions will guide you through cloning the project, building it, and setting it up to run from anywhere on your Ubuntu system.
 
@@ -31,7 +31,7 @@ git clone https://github.com/hiep194278/media-player-cli-app.git
 ### Step 2: once the repository is cloned, navigate into the project directory:
 
 ```bash
-cd media_player_cli_app
+cd media-player-cli-app
 ```
 ### Step 3: Build the Project
 
@@ -43,10 +43,10 @@ make
 
 ### Step 4: Move the Executable to a Directory in Your <span style="background-color:grey">PATH</span>
 
-To run the program from anywhere in your terminal, move the compiled executable to a directory that's in your system's PATH, such as /usr/local/bin:
+To run the program from anywhere in your terminal, move the compiled executable to a directory that's in your system's PATH, such as <span style="background-color:grey">/usr/local/bin</span>:
 
 ```bash
-sudo mv media_player_app /usr/local/bin/
+sudo mv media_player_cli_app /usr/local/bin/
 ```
 
 You can verify if the directory is in your PATH by running:
@@ -68,4 +68,10 @@ media_player_cli_app
 
 ```bash
 sudo rm /usr/local/bin/media_player_cli_app
+```
+
+**Clean the project directory**, you can remove all compiled object files and the build/ directory by running:
+
+```bash
+make clean
 ```
