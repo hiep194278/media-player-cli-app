@@ -1,5 +1,6 @@
 #include "AppController.hpp"
 #include <iostream>
+#include <limits>
 
 void AppController::runApp() {
     std::cout << "-----------------------------------------" << std::endl;
@@ -11,6 +12,15 @@ void AppController::runApp() {
     while (appIsRunning) {
         displayMenu();
         std::cin >> choice;
+
+        // Check if input failed (not an integer)
+        if (std::cin.fail()) {
+            std::cin.clear(); // Clear the error flag
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), 
+                '\n'); // Ignore the rest of the invalid input
+            std::cout << "Invalid input, please enter a number.\n\n";
+            continue;
+        }
 
         switch (choice) {
             case VIEW_MEDIA_FILES_AND_SUB_FOLDERS:
