@@ -1,28 +1,45 @@
-TARGET = program
-CC = g++
-CXXFLAGS = -g -Wall -std=c++17
-BUILD_DIR = build
-SRC_DIR = src
-INC_DIR = include
+# Compiler and flags
+CXX := g++
+CXXFLAGS := -std=c++17 -Wall -I include/controller -I include/model -I include/view
 
-CXX_SRC = $(wildcard $(SRC_DIR)/**/*.cpp)
-INCLUDES = $(wildcard -I$(INC_DIR)/**/)
-OBJECTS = $(patsubst $(SRC_DIR)/**/%.cpp, $(BUILD_DIR)/%.o, $(CXX_SRC))
+# Directories
+SRC_DIR := src
+INCLUDE_DIR := include
+BUILD_DIR := build
+CONTROLLER_DIR := $(SRC_DIR)/controller
+MODEL_DIR := $(SRC_DIR)/model
+VIEW_DIR := $(SRC_DIR)/view
 
-all: $(TARGET)
+# Source files
+SRCS := $(CONTROLLER_DIR)/AppController.cpp \
+        $(MODEL_DIR)/File.cpp \
+        $(SRC_DIR)/main.cpp
 
-$(TARGET): $(OBJECTS)
-	$(CC) $(CXXFLAGS) $^ -o $@
+# Object files stored in build directory mirroring src structure
+OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 
-# $(BUILD_DIR)/%.o: $(SRC_DIR)/**/%.cpp | $(BUILD_DIR)
-$(BUILD_DIR)/%.o: $(BUILD_DIR)
-	$(CC) $(CXXFLAGS) -c $< $(INCLUDES) -o $@
+# Executable
+TARGET := media_player_app
 
+# Default target
+all: $(BUILD_DIR) $(TARGET)
+
+# Create the build directory and necessary subdirectories
 $(BUILD_DIR):
-	mkdir $(BUILD_DIR)
+	mkdir -p $(BUILD_DIR)/controller $(BUILD_DIR)/model $(BUILD_DIR)/view
 
-clean: 
-	rm -r -f $(BUILD_DIR)
+# Link object files to create the executable
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
 
-run: $(TARGET)
-	./$(TARGET)
+# Compile .cpp files to .o files, placing them in the build directory
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
+	mkdir -p $(dir $@)  # Ensure subdirectories are created
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Clean up build files
+clean:
+	rm -rf $(BUILD_DIR) $(TARGET)
+
+# Phony targets
+.PHONY: all clean
