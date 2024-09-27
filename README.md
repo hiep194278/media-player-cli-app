@@ -70,7 +70,7 @@ media_player_cli_app
 sudo rm /usr/local/bin/media_player_cli_app
 ```
 
-**Clean the project directory**, you can remove all compiled object files and the build/ directory by running:
+**To clean the project directory**, you can remove all compiled object files and the build/ directory by running:
 
 ```bash
 make clean
