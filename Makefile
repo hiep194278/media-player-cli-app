@@ -1,19 +1,15 @@
 # Compiler and flags
 CXX := g++
-CXXFLAGS := -std=c++17 -Wall -I include/controller -I include/model -I include/view
+CXXFLAGS := -g -std=c++17 -Wall -I include/controller -I include/model -I include/view
 
 # Directories
 SRC_DIR := src
 INCLUDE_DIR := include
 BUILD_DIR := build
-CONTROLLER_DIR := $(SRC_DIR)/controller
-MODEL_DIR := $(SRC_DIR)/model
-VIEW_DIR := $(SRC_DIR)/view
 
 # Source files
-SRCS := $(CONTROLLER_DIR)/AppController.cpp \
-        $(MODEL_DIR)/File.cpp \
-        $(SRC_DIR)/main.cpp
+SRCS := $(wildcard $(SRC_DIR)/*.cpp)   \
+		$(wildcard $(SRC_DIR)/*/*.cpp)
 
 # Object files stored in build directory mirroring src structure
 OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
@@ -24,9 +20,10 @@ TARGET := media_player_app
 # Default target
 all: $(BUILD_DIR) $(TARGET)
 
-# Create the build directory and necessary subdirectories
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/controller $(BUILD_DIR)/model $(BUILD_DIR)/view
+# Create the build directory and necessary subdirectories
+
 
 # Link object files to create the executable
 $(TARGET): $(OBJS)
