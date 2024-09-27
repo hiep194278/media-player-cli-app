@@ -7,6 +7,9 @@
 /*.so
 /*.dylib
 
+# Ignore tests
+/test/
+
 # Ignore executable
 /media_player_app
 
