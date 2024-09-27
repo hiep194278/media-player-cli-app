@@ -68,18 +68,16 @@ void AppController::runApp() {
 void AppController::displayMenu() const {
     std::cout << "Option list:" << std::endl;
     std::cout << VIEW_MEDIA_FILES_AND_SUB_FOLDERS 
-        << ". View media files and sub-folders" << std::endl;
-    std::cout << ALL_PLAYLISTS << ". All playlists" << std::endl;
-    std::cout << CREATE_PLAYLIST << ". Create a playlist" << std::endl;
-    std::cout << DELETE_PLAYLIST << ". Delete a playlist" << std::endl;
-    std::cout << START_PLAYLIST << ". Start a playlist" << std::endl;
-    std::cout << EDIT_PLAYLIST_VIEW << ". Enter playlist edit view" 
-        << std::endl;
-    std::cout << SHOW_METADATA << ". Show metadata of a file" << std::endl;
-    std::cout << EDIT_METADATA << ". Edit metadata of a file" << std::endl;
-    std::cout << ENTER_CONTROL_MODE << ". Enter music control view" << 
-        std::endl;
-    std::cout << ADJUST_VOLUME << ". Adjust volume" << std::endl;
-    std::cout << EXIT_APP << ". Exit application" << std::endl;
-    std::cout << "Enter your choice: ";
+        << ". View media files and sub-folders\n";
+    std::cout << ALL_PLAYLISTS << ". All playlists\n";
+    std::cout << CREATE_PLAYLIST << ". Create a playlist\n";
+    std::cout << DELETE_PLAYLIST << ". Delete a playlist\n";
+    std::cout << START_PLAYLIST << ". Start a playlist\n";
+    std::cout << EDIT_PLAYLIST_VIEW << ". Enter playlist edit view\n";
+    std::cout << SHOW_METADATA << ". Show metadata of a file\n";
+    std::cout << EDIT_METADATA << ". Edit metadata of a file\n";
+    std::cout << ENTER_CONTROL_MODE << ". Enter music control view\n";
+    std::cout << ADJUST_VOLUME << ". Adjust volume\n";
+    std::cout << EXIT_APP << ". Exit application\n";
+    std::cout << "\nEnter your choice: ";
 }
