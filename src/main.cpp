@@ -3,7 +3,7 @@
 #include "AppController.hpp"
 
 int main() {
-    AppController app;
+    AppController app(std::filesystem::current_path());
     app.runApp();
 
     return 0;

@@ -2,6 +2,9 @@
 #include <iostream>
 #include <limits>
 
+AppController::AppController(const std::filesystem::path& currentPath) 
+    : currentWorkingDir(currentPath) {};
+
 void AppController::runApp() {
     std::cout << "-----------------------------------------" << std::endl;
     std::cout << "Welcome to Media Player CLI Application !" << std::endl;
@@ -25,6 +28,9 @@ void AppController::runApp() {
         switch (choice) {
             case VIEW_MEDIA_FILES_AND_SUB_FOLDERS:
                 std::cout << "Viewing media files and sub-folders...\n";
+                break;
+            case CHANGE_WORKING_DIRECTORY:
+                std::cout << "Change working directory...\n";
                 break;
             case ALL_PLAYLISTS:
                 std::cout << "Viewing all playlists...\n";
@@ -66,9 +72,13 @@ void AppController::runApp() {
 }
 
 void AppController::displayMenu() const {
+    std::cout << "Current working directory: " << currentWorkingDir 
+        << std::endl;
     std::cout << "Option list:" << std::endl;
     std::cout << VIEW_MEDIA_FILES_AND_SUB_FOLDERS 
         << ". View media files and sub-folders\n";
+    std::cout << CHANGE_WORKING_DIRECTORY 
+        << ". Change working directory\n";
     std::cout << ALL_PLAYLISTS << ". All playlists\n";
     std::cout << CREATE_PLAYLIST << ". Create a playlist\n";
     std::cout << DELETE_PLAYLIST << ". Delete a playlist\n";
