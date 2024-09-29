@@ -19,12 +19,18 @@ int PaginationView::calculateTotalPages() const {
 // Method to display a specific page of files
 void PaginationView::displayPage() {
     int start = currentPage * itemsPerPage;
-    int end = std::min(static_cast<int>(files.size()), start + itemsPerPage);
+    int numItems = static_cast<int>(files.size());
+    int end = std::min(numItems, start + itemsPerPage);
 
-    std::cout << "Page " << currentPage + 1 << " of " << calculateTotalPages() << std::endl;
+    std::cout << "Page " << currentPage + 1 << " of " 
+              << calculateTotalPages() << " (Showing items " 
+              << start + 1 << " to " << end << " over " << numItems 
+              << " items)" 
+              << std::endl;
     std::cout << "-------------------------" << std::endl;
 
     for (int i = start; i < end; ++i) {
+        std::cout << i + 1 << ". ";
         files[i]->displayInfo();
     }
 }
@@ -37,10 +43,10 @@ void PaginationView::handlePagination() {
         displayPage();
 
         // Display navigation options
-        std::cout << "\nOptions:" << std::endl;
-        std::cout << "n - Next Page" << std::endl;
-        std::cout << "p - Previous Page" << std::endl;
-        std::cout << "q - Quit" << std::endl;
+        std::cout << "\nOptions: ";
+        std::cout << "[n] Next Page";
+        std::cout << "   [p] Previous Page";
+        std::cout << "   [q] Quit" << std::endl;
         std::cout << "Enter choice: ";
         std::cin >> choice;
 
