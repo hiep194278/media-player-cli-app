@@ -3,14 +3,14 @@
 #include <string>
 #include <filesystem>
 
-class File {
-public:
-    enum FileType {
-        AUDIO,
-        VIDEO,
-        FOLDER
-    };
+enum class FileType {
+    Audio,
+    Video,
+    Folder,
+    Unknown
+};
 
+class File {
 protected:
     std::filesystem::path filePath;
 
@@ -33,4 +33,7 @@ public:
 
     // Clean, absolute display of the path (canonical)
     std::string getCanonicalPath() const;
+
+    // Static method to check file type
+    static FileType determineFileType(const std::filesystem::path& filePath);
 };

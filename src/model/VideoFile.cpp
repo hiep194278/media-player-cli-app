@@ -6,11 +6,12 @@ VideoFile::VideoFile(const std::filesystem::path& path) : File(path) {}
 
 // Displays the video file's information
 void VideoFile::displayInfo() const {
-    std::cout << "Video File: " << getFileName() 
-              << " at " << getCanonicalPath() << std::endl;
+    std::cout << "[Video] " << getFileName() 
+            //   << " at " << getCanonicalPath() 
+              << std::endl;
 }
 
 // Returns the type of the file
-File::FileType VideoFile::getFileType() const {
-    return VIDEO;
+FileType VideoFile::getFileType() const {
+    return FileType::Video;
 }

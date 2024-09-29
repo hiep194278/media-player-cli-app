@@ -27,3 +27,22 @@ std::string File::getCanonicalPath() const {
                                     // to original path
     }
 }
+
+// Static method to determine the file type
+FileType File::determineFileType(const std::filesystem::path& filePath) {
+    if (std::filesystem::is_directory(filePath)) {
+        return FileType::Folder;
+    }
+    
+    std::string extension = filePath.extension().string();
+    
+    if (extension == ".mp3" || extension == ".wav" || extension == ".ogg" ||
+        extension == ".voc" || extension == ".flac"
+    ) {
+        return FileType::Audio;
+    } else if (extension == ".mp4" || extension == ".avi") {
+        return FileType::Video;
+    }
+    
+    return FileType::Unknown;
+}

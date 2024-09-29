@@ -1,4 +1,8 @@
 #include "AppController.hpp"
+#include "PaginationView.hpp"
+#include "AudioFile.hpp"
+#include "VideoFile.hpp"
+#include "Folder.hpp"
 #include <iostream>
 #include <limits>
 
@@ -27,7 +31,7 @@ void AppController::runApp() {
 
         switch (choice) {
             case VIEW_MEDIA_FILES_AND_SUB_FOLDERS:
-                std::cout << "Viewing media files and sub-folders...\n";
+                viewFilesAndSubFolders();
                 break;
             case CHANGE_WORKING_DIRECTORY:
                 changeWorkingDir();
@@ -91,6 +95,40 @@ void AppController::displayMenu() const {
     std::cout << EXIT_APP << ". Exit application\n";
     std::cout << "\nEnter your choice: ";
 }
+
+void AppController::viewFilesAndSubFolders() const {
+    std::string relativePath;
+    std::cout 
+        << "Enter the relative path to the current working directory: ";
+    std::cin >> relativePath;
+
+    // Create a full path by appending the relative path to the current 
+    // working directory
+    std::filesystem::path fullPath = currentWorkingDir / relativePath;
+
+    if (std::filesystem::exists(fullPath) && 
+        std::filesystem::is_directory(fullPath)
+    ) {
+        std::vector<std::shared_ptr<File>> files;
+
+        for (const auto& entry : std::filesystem::directory_iterator(fullPath)) {
+            FileType fileType = File::determineFileType(entry.path());
+
+            if (fileType == FileType::Audio) {
+                files.push_back(std::make_shared<AudioFile>(entry.path().string()));
+            } else if (fileType == FileType::Video) {
+                files.push_back(std::make_shared<VideoFile>(entry.path().string()));
+            } else if (fileType == FileType::Folder) {
+                files.push_back(std::make_shared<Folder>(entry.path().string()));
+            }
+        }
+
+        PaginationView paginationView(files, 5);
+        paginationView.handlePagination();
+    } else {
+        std::cout << "Invalid folder path!\n";
+    }
+};
 
 void AppController::changeWorkingDir() {
     std::string relativePath;
