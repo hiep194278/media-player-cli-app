@@ -1,11 +1,36 @@
 #pragma once
 
 #include <string>
+#include <filesystem>
 
 class File {
-private:
-    
-    
 public:
-    void getFile() const;
+    enum FileType {
+        AUDIO,
+        VIDEO,
+        FOLDER
+    };
+
+protected:
+    std::filesystem::path filePath;
+
+public:
+    // Constructor
+    File(const std::filesystem::path& path);
+    
+    // Virtual Destructor
+    virtual ~File();
+
+    // Pure virtual methods
+    virtual void displayInfo() const = 0;
+    virtual FileType getFileType() const = 0;
+
+    // Getter for the full path
+    std::filesystem::path getFilePath() const;
+
+    // Getter for the file name
+    std::string getFileName() const;
+
+    // Clean, absolute display of the path (canonical)
+    std::string getCanonicalPath() const;
 };
