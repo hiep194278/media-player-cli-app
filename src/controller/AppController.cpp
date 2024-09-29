@@ -30,7 +30,7 @@ void AppController::runApp() {
                 std::cout << "Viewing media files and sub-folders...\n";
                 break;
             case CHANGE_WORKING_DIRECTORY:
-                std::cout << "Change working directory...\n";
+                changeWorkingDir();
                 break;
             case ALL_PLAYLISTS:
                 std::cout << "Viewing all playlists...\n";
@@ -90,4 +90,26 @@ void AppController::displayMenu() const {
     std::cout << ADJUST_VOLUME << ". Adjust volume\n";
     std::cout << EXIT_APP << ". Exit application\n";
     std::cout << "\nEnter your choice: ";
+}
+
+void AppController::changeWorkingDir() {
+    std::string relativePath;
+    std::cout 
+        << "Enter the relative path to the current working directory: ";
+    std::cin >> relativePath;
+
+    // Create a full path by appending the relative path to the current 
+    // working directory
+    std::filesystem::path fullPath = currentWorkingDir / relativePath;
+
+    // Ensure the relative path is valid
+    if (std::filesystem::exists(fullPath) && 
+        std::filesystem::is_directory(fullPath)
+    ) {
+        currentWorkingDir = std::filesystem::canonical(fullPath);
+        std::cout << "New working directory set: " << currentWorkingDir;
+        std::cout << std::endl;
+    } else {
+        std::cout << "Invalid folder path!\n";
+    }
 }

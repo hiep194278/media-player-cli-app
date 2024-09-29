@@ -22,4 +22,5 @@ public:
     AppController(const std::filesystem::path& currentPath);
     void runApp();
     void displayMenu() const;
+    void changeWorkingDir();
 };
