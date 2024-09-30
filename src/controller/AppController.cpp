@@ -261,7 +261,6 @@ void AppController::enterEditPlaylistView() {
                 ) {
                     auto audioFile = std::make_shared<AudioFile>(fullPath);
                     playlist->addAudioFile(audioFile);
-                    std::cout << "Audio file '" << audioFile->getFileName() << "' added to playlist.\n";
                 } else {
                     std::cout << "Invalid audio file at path: " << fullPath << '\n';
                 }
@@ -270,7 +269,6 @@ void AppController::enterEditPlaylistView() {
                 std::cout << "Enter the name of the audio file to delete: ";
                 std::cin >> fileName;
                 playlist->removeAudioFile(fileName);
-                std::cout << "Audio file '" << fileName << "' removed from playlist.\n";
             } else if (choice == 's' || choice == 'S') {
                 PaginationView paginationView(playlist->getAudioFiles());
                 paginationView.handlePagination();
@@ -282,9 +280,6 @@ void AppController::enterEditPlaylistView() {
             }
 
         }
-        
-    } else {
-        std::cerr << "Playlist not found: " << playlistName << std::endl;
     }
 }
 

@@ -47,6 +47,21 @@ std::string Playlist::getName() const {
 
 // Add an audio file to the playlist
 void Playlist::addAudioFile(const std::shared_ptr<File>& audioFile) {
+    std::string audioFileName = audioFile->getFileName();
+
+    // Check if an audio file with the same name already exists
+    auto it = std::find_if(audioFiles.begin(), audioFiles.end(),
+        [&audioFileName](const std::shared_ptr<File>& audioFile) {
+            return audioFile->getFileName() == audioFileName;
+        });
+
+    if (it != audioFiles.end()) {
+        // Playlist with the same name exists
+        std::cerr << "Audio file with the name '" << audioFileName 
+                  << "' already exists." << std::endl;
+        return;
+    }
+
     audioFiles.push_back(audioFile);
     std::cout << "Added audio file: " << audioFile->getFileName() 
               << " to the playlist: " << name << std::endl;
@@ -54,12 +69,26 @@ void Playlist::addAudioFile(const std::shared_ptr<File>& audioFile) {
 
 // Remove an audio file from the playlist by filename
 void Playlist::removeAudioFile(const std::string& fileName) {
-    audioFiles.erase(std::remove_if(audioFiles.begin(), audioFiles.end(),
-        [&fileName](const std::shared_ptr<File>& audioFile) {
-            return audioFile->getFileName() == fileName;
-        }), audioFiles.end());
-    std::cout << "Removed audio file: " << fileName 
-              << " from the playlist: " << name << std::endl;
+    bool found = false;
+
+    // Iterate through the audio files in the playlist
+    for (auto it = audioFiles.begin(); it != audioFiles.end(); ++it) {
+        std::string currentFileName = (*it)->getFileName();
+
+        // Check if the file name matches the one to be removed
+        if (currentFileName == fileName) {
+            // Remove the audio file from the playlist
+            audioFiles.erase(it);
+            found = true;
+            break;
+        }
+    }
+
+    // If the audio file is not found
+    if (!found) {
+        std::cout << "Audio file not found in the playlist: " << fileName 
+                  << std::endl;
+    }
 }
 
 // // Load audio file using SDL2 Mixer (helper method)
