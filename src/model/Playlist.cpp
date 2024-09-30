@@ -46,7 +46,7 @@ std::string Playlist::getName() const {
 // }
 
 // Add an audio file to the playlist
-void Playlist::addAudioFile(const std::shared_ptr<AudioFile>& audioFile) {
+void Playlist::addAudioFile(const std::shared_ptr<File>& audioFile) {
     audioFiles.push_back(audioFile);
     std::cout << "Added audio file: " << audioFile->getFileName() 
               << " to the playlist: " << name << std::endl;
@@ -55,23 +55,11 @@ void Playlist::addAudioFile(const std::shared_ptr<AudioFile>& audioFile) {
 // Remove an audio file from the playlist by filename
 void Playlist::removeAudioFile(const std::string& fileName) {
     audioFiles.erase(std::remove_if(audioFiles.begin(), audioFiles.end(),
-        [&fileName](const std::shared_ptr<AudioFile>& audioFile) {
+        [&fileName](const std::shared_ptr<File>& audioFile) {
             return audioFile->getFileName() == fileName;
         }), audioFiles.end());
     std::cout << "Removed audio file: " << fileName 
               << " from the playlist: " << name << std::endl;
-}
-
-// Modify an audio file (replace an existing one)
-void Playlist::modifyAudioFile(const std::string& fileName, const std::shared_ptr<AudioFile>& newAudioFile) {
-    for (auto& audioFile : audioFiles) {
-        if (audioFile->getFileName() == fileName) {
-            audioFile = newAudioFile;
-            std::cout << "Modified audio file: " << fileName << " in the playlist: " << name << std::endl;
-            return;
-        }
-    }
-    std::cerr << "Audio file: " << fileName << " not found in the playlist." << std::endl;
 }
 
 // // Load audio file using SDL2 Mixer (helper method)
@@ -83,6 +71,10 @@ void Playlist::modifyAudioFile(const std::string& fileName, const std::shared_pt
 //     }
 //     return true;
 // }
+
+std::vector<std::shared_ptr<File>> Playlist::getAudioFiles() const {
+    return audioFiles;
+};
 
 // Display all audio files in the playlist
 void Playlist::displayAudioFiles() const {

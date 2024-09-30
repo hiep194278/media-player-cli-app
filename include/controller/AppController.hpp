@@ -7,7 +7,7 @@
 #define DELETE_PLAYLIST 5
 #define START_PLAYLIST 6
 #define EDIT_PLAYLIST_VIEW 7
-#define ENTER_CONTROL_MODE 8
+#define ENTER_MUSIC_CONTROL_MODE 8
 #define ADJUST_VOLUME 9
 #define SHOW_METADATA 10
 #define EDIT_METADATA 11
@@ -33,10 +33,12 @@ public:
     std::filesystem::path enterRelativePath() const;
 
     // Playlist management
+    std::string enterPlaylistName();
     void createPlaylist();
     void deletePlaylist();
     void listPlaylists() const;
     std::shared_ptr<Playlist> getPlaylist(const std::string& playlistName);
+    void enterEditPlaylistView();
 
     // Show all audio files in the current playlist
     void showCurrentPlaylist(const std::string& playlistName) const;

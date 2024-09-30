@@ -46,7 +46,7 @@ void PaginationView::handlePagination() {
         std::cout << "\nOptions: ";
         std::cout << "[n] Next Page";
         std::cout << "   [p] Previous Page";
-        std::cout << "   [q] Quit" << std::endl;
+        std::cout << "   [q] Quit Pagination View" << std::endl;
         std::cout << "Enter choice: ";
         std::cin >> choice;
 

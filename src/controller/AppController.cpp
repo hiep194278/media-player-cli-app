@@ -50,9 +50,9 @@ void AppController::runApp() {
                 std::cout << "Starting a playlist...\n";
                 break;
             case EDIT_PLAYLIST_VIEW:
-                std::cout << "Entering playlist edit view...\n";
+                enterEditPlaylistView();
                 break;
-            case ENTER_CONTROL_MODE:
+            case ENTER_MUSIC_CONTROL_MODE:
                 std::cout << "Entering control mode...\n";
                 break;
             case ADJUST_VOLUME:
@@ -89,7 +89,7 @@ void AppController::displayMenu() const {
     std::cout << DELETE_PLAYLIST << ". Delete a playlist\n";
     std::cout << START_PLAYLIST << ". Start a playlist\n";
     std::cout << EDIT_PLAYLIST_VIEW << ". Enter playlist edit view\n";
-    std::cout << ENTER_CONTROL_MODE << ". Enter music control view\n";
+    std::cout << ENTER_MUSIC_CONTROL_MODE << ". Enter music control view\n";
     std::cout << ADJUST_VOLUME << ". Adjust volume\n";
     std::cout << SHOW_METADATA << ". Show metadata of a file\n";
     std::cout << EDIT_METADATA << ". Edit metadata of a file\n";
@@ -121,7 +121,7 @@ void AppController::viewFilesAndSubFolders() const {
             }
         }
 
-        PaginationView paginationView(files, 5);
+        PaginationView paginationView(files);
         paginationView.handlePagination();
     } else {
         std::cout << "Invalid folder path!\n";
@@ -156,12 +156,18 @@ std::filesystem::path AppController::enterRelativePath() const {
     return fullPath;
 }
 
-// Create a new playlist
-void AppController::createPlaylist() {
+std::string AppController::enterPlaylistName() {
     std::string playlistName;
     std::cout 
         << "Enter the playlist name: ";
     std::cin >> playlistName;
+
+    return playlistName;
+}
+
+// Create a new playlist
+void AppController::createPlaylist() {
+    std::string playlistName = enterPlaylistName();
     
     // Check if a playlist with the same name already exists
     auto it = std::find_if(playlists.begin(), playlists.end(),
@@ -183,10 +189,7 @@ void AppController::createPlaylist() {
 
 // Delete a playlist by name
 void AppController::deletePlaylist() {
-    std::string playlistName;
-    std::cout 
-        << "Enter the playlist name: ";
-    std::cin >> playlistName;
+    std::string playlistName = enterPlaylistName();
 
     auto it = std::find_if(playlists.begin(), playlists.end(),
         [&playlistName](const std::shared_ptr<Playlist>& playlist) {
@@ -219,6 +222,70 @@ const std::string& playlistName) {
     }
     std::cerr << "Playlist not found: " << playlistName << std::endl;
     return nullptr;
+}
+
+// Enter Editing Playlist View
+void AppController::enterEditPlaylistView() {
+    std::string playlistName = enterPlaylistName(); 
+    
+    std::shared_ptr<Playlist> playlist = getPlaylist(playlistName);
+
+    if (playlist != nullptr) {
+        char choice;
+        while (true)
+        {
+            std::cout << "\nCurrent working directory: " 
+                      << currentWorkingDir;
+            std::cout << "\nPlaylist name: " << playlistName;
+            // Display navigation options
+            std::cout << "\nOptions: \n";
+            std::cout << "[a] Add an audio file to the playlist\n";
+            std::cout << "[r] Remove a file from the playlist\n";
+            std::cout << "[s] Show all files in the playlist\n";
+            std::cout << "[e] Exit edit playlist view\n";
+            std::cout << "Enter choice: ";
+            std::cin >> choice;
+
+            // Handle user input
+            if (choice == 'a' || choice == 'A') {
+                std::string relativePath;
+                std::cout << "Enter the relative path to the audio file: ";
+                std::cin >> relativePath;
+
+                // Resolve the relative path to the full path based on the 
+                // current working directory
+                std::filesystem::path fullPath = currentWorkingDir / relativePath;
+
+                if (std::filesystem::exists(fullPath) && 
+                    File::determineFileType(fullPath) == FileType::Audio
+                ) {
+                    auto audioFile = std::make_shared<AudioFile>(fullPath);
+                    playlist->addAudioFile(audioFile);
+                    std::cout << "Audio file '" << audioFile->getFileName() << "' added to playlist.\n";
+                } else {
+                    std::cout << "Invalid audio file at path: " << fullPath << '\n';
+                }
+            } else if (choice == 'r' || choice == 'R') {
+                std::string fileName;
+                std::cout << "Enter the name of the audio file to delete: ";
+                std::cin >> fileName;
+                playlist->removeAudioFile(fileName);
+                std::cout << "Audio file '" << fileName << "' removed from playlist.\n";
+            } else if (choice == 's' || choice == 'S') {
+                PaginationView paginationView(playlist->getAudioFiles());
+                paginationView.handlePagination();
+            } else if (choice == 'e' || choice == 'E') {
+                std::cout << "Exiting the Edit Playlist View.\n";
+                return;
+            } else {
+                std::cout << "Invalid option! Please try again." << std::endl;
+            }
+
+        }
+        
+    } else {
+        std::cerr << "Playlist not found: " << playlistName << std::endl;
+    }
 }
 
 // Show the audio files in a specific playlist

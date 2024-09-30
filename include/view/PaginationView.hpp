@@ -6,7 +6,7 @@
 
 class PaginationView {
 public:
-    PaginationView(const std::vector<std::shared_ptr<File>>& files, int itemsPerPage);
+    PaginationView(const std::vector<std::shared_ptr<File>>& files, int itemsPerPage = 5);
 
     // Method to display a specific page of files
     void displayPage();
