@@ -7,21 +7,37 @@
 #define DELETE_PLAYLIST 5
 #define START_PLAYLIST 6
 #define EDIT_PLAYLIST_VIEW 7
-#define SHOW_METADATA 8
-#define EDIT_METADATA 9
-#define ENTER_CONTROL_MODE 10
-#define ADJUST_VOLUME 11
+#define ENTER_CONTROL_MODE 8
+#define ADJUST_VOLUME 9
+#define SHOW_METADATA 10
+#define EDIT_METADATA 11
 #define EXIT_APP 12
 
+#include "Playlist.hpp"
 #include <filesystem>
 
 class AppController {
 private:
     std::filesystem::path currentWorkingDir;
+    std::vector<std::shared_ptr<Playlist>> playlists;  // Collection of 
+                                                       // playlists
+
 public:
     AppController(const std::filesystem::path& currentPath);
+
+    // File Management
     void runApp();
     void displayMenu() const;
     void viewFilesAndSubFolders() const;
     void changeWorkingDir();
+    std::filesystem::path enterRelativePath() const;
+
+    // Playlist management
+    void createPlaylist();
+    void deletePlaylist();
+    void listPlaylists() const;
+    std::shared_ptr<Playlist> getPlaylist(const std::string& playlistName);
+
+    // Show all audio files in the current playlist
+    void showCurrentPlaylist(const std::string& playlistName) const;
 };
