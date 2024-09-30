@@ -5,8 +5,9 @@ BUILD_DIR := build
 
 # Compiler and flags
 CXX := g++
-# CXXFLAGS := -g -std=c++17 -Wall -I include/controller -I include/model -I include/view
-CXXFLAGS := -g -std=c++17 -Wall $(addprefix -I , $(INCLUDE_DIR) $(wildcard $(INCLUDE_DIR)/*))
+LIB_INCLUDES := -I /usr/include/taglib
+CXXFLAGS := -g -std=c++17 -Wall $(addprefix -I , $(INCLUDE_DIR) $(wildcard $(INCLUDE_DIR)/*)) $(LIB_INCLUDES)
+LDFLAGS := -ltag
 
 # Source files
 SRCS := $(wildcard $(SRC_DIR)/*.cpp)   \
@@ -23,7 +24,7 @@ all: $(TARGET)
 
 # Link object files to create the executable
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDFLAGS)
 
 # Compile .cpp files to .o files, creating necessary subdirectories
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp

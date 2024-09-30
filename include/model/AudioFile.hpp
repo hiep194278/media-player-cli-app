@@ -2,6 +2,8 @@
 
 #include "File.hpp"
 #include <filesystem>
+#include <taglib/fileref.h>
+#include <taglib/tag.h>
 
 /**
  * @brief Represents an audio file in the media player application.
@@ -16,5 +18,12 @@ public:
 
     // Override getFileType
     FileType getFileType() const override;
+
+    // Method to display metadata
+    void showMetadata() const;
+
+    // Method to update metadata
+    void updateMetadata(const std::string& title, const std::string& artist, const std::string& album);
+
 };
 

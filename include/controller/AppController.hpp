@@ -42,4 +42,7 @@ public:
 
     // Show all audio files in the current playlist
     void showCurrentPlaylist(const std::string& playlistName) const;
+
+    // Metadata Management
+    
 };
