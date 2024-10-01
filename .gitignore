@@ -11,7 +11,7 @@
 /test/
 
 # Ignore executable
-/media_player_app
+/media_player_cli_app
 
 # Ignore editor and IDE specific files
 *.swp
