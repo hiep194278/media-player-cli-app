@@ -21,6 +21,7 @@ private:
     std::filesystem::path currentWorkingDir;
     std::vector<std::shared_ptr<Playlist>> playlists;  // Collection of 
                                                        // playlists
+    std::shared_ptr<Playlist> currentRunningPlaylist;
 
 public:
     AppController(const std::filesystem::path& currentPath);
@@ -46,4 +47,7 @@ public:
     // Metadata Management
     void showFileMetadata() const;
     void updateFileMetadata() const;
+
+    // Playing music
+    void startPlaylist();
 };

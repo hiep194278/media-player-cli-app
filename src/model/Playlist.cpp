@@ -1,6 +1,8 @@
 #include "Playlist.hpp"
 #include <iostream>
 #include <algorithm>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
 // Constructor
 Playlist::Playlist(const std::string& name) : name(name) {}
@@ -114,37 +116,33 @@ void Playlist::displayAudioFiles() const {
 }
 
 // Play the playlist using SDL2
-// void Playlist::play() {
-//     if (audioFiles.empty()) {
-//         std::cerr << "The playlist is empty!" << std::endl;
-//         return;
-//     }
+void Playlist::play() {
+    if (audioFiles.empty()) {
+        std::cerr << "The playlist is empty!" << std::endl;
+        return;
+    }
 
-//     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-//         std::cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
-//         return;
-//     }
+    // if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+    //     std::cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
+    //     return;
+    // }
 
-//     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-//         std::cerr << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << std::endl;
-//         SDL_Quit();
-//         return;
-//     }
+    // if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+    //     std::cerr << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << std::endl;
+    //     SDL_Quit();
+    //     return;
+    // }
 
-//     for (const auto& audioFile : audioFiles) {
-//         std::cout << "Playing: " << audioFile->getFileName() << std::endl;
-//         if (loadAudioFile(audioFile->getFilePath())) {
-//             Mix_Music* music = Mix_LoadMUS(audioFile->getFilePath().c_str());
-//             if (Mix_PlayMusic(music, 1) == -1) {
-//                 std::cerr << "Error playing music: " << Mix_GetError() << std::endl;
-//             }
-//             while (Mix_PlayingMusic()) {
-//                 SDL_Delay(100);  // Wait until the current music finishes
-//             }
-//             Mix_FreeMusic(music);  // Free the music resource
-//         }
-//     }
+    for (const auto& audioFile : audioFiles) {
+        // std::cout << "Playing: " << audioFile->getFileName() << std::endl;
+        Mix_Music* music = Mix_LoadMUS(audioFile->getFilePath().c_str());
+        if (Mix_PlayMusic(music, 1) == -1) {
+            std::cerr << "Error playing music: " << Mix_GetError() << std::endl;
+        }
+        while (Mix_PlayingMusic()) {
+            SDL_Delay(100);  // Wait until the current music finishes
+        }
 
-//     Mix_CloseAudio();
-//     SDL_Quit();
-// }
+        Mix_FreeMusic(music);  // Free the music resource
+    }
+}

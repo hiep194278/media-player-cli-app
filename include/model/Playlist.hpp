@@ -32,7 +32,7 @@ public:
     std::vector<std::shared_ptr<File>> getAudioFiles() const;
 
     // Play the playlist
-    // void play();
+    void play();
 
     // Display all audio files in the playlist
     void displayAudioFiles() const;

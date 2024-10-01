@@ -8,7 +8,7 @@
 #include <algorithm>
 
 AppController::AppController(const std::filesystem::path& currentPath) 
-    : currentWorkingDir(currentPath) {};
+: currentWorkingDir(currentPath), currentRunningPlaylist(nullptr) {};
 
 void AppController::runApp() {
     std::cout << "-----------------------------------------" << std::endl;
@@ -50,7 +50,7 @@ void AppController::runApp() {
                 enterEditPlaylistView();
                 break;
             case START_PLAYLIST:
-                std::cout << "Starting a playlist...\n";
+                startPlaylist();
                 break;
             case ENTER_MUSIC_CONTROL_MODE:
                 std::cout << "Entering control mode...\n";
@@ -325,3 +325,17 @@ void AppController::updateFileMetadata() const {
         std::cout << "Invalid audio file path!\n";
     }    
 };
+
+void AppController::startPlaylist() {
+    std::string playlistName = enterPlaylistName();
+
+    for (const auto& playlist : playlists) {
+        if (playlist->getName() == playlistName) {
+            currentRunningPlaylist = playlist;
+            currentRunningPlaylist->play();  // Assuming Playlist has a play() method
+            std::cout << "Playing playlist: " << playlistName << std::endl;
+            return;
+        }
+    }
+    std::cerr << "Playlist not found!" << std::endl;
+}

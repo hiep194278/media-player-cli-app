@@ -5,9 +5,9 @@ BUILD_DIR := build
 
 # Compiler and flags
 CXX := g++
-LIB_INCLUDES := -I /usr/include/taglib
+LIB_INCLUDES := -I /usr/include/taglib -I /usr/include/SDL2
 CXXFLAGS := -g -std=c++17 -Wall $(addprefix -I , $(INCLUDE_DIR) $(wildcard $(INCLUDE_DIR)/*)) $(LIB_INCLUDES)
-LDFLAGS := -ltag
+LDFLAGS := -ltag -lSDL2 -lSDL2_mixer
 
 # Source files
 SRCS := $(wildcard $(SRC_DIR)/*.cpp)   \
