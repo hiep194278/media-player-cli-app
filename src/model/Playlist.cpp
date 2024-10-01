@@ -12,41 +12,6 @@ std::string Playlist::getName() const {
     return name;
 }
 
-// void Playlist::play() {
-//     if (audioFiles.empty()) {
-//         std::cerr << "The playlist is empty!" << std::endl;
-//         return;
-//     }
-
-//     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-//         std::cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
-//         return;
-//     }
-
-//     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-//         std::cerr << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << std::endl;
-//         SDL_Quit();
-//         return;
-//     }
-
-//     for (const auto& audioFile : audioFiles) {
-//         std::cout << "Playing: " << audioFile->getFileName() << std::endl;
-//         if (loadAudioFile(audioFile->getFilePath())) {
-//             Mix_Music* music = Mix_LoadMUS(audioFile->getFilePath().c_str());
-//             if (Mix_PlayMusic(music, 1) == -1) {
-//                 std::cerr << "Error playing music: " << Mix_GetError() << std::endl;
-//             }
-//             while (Mix_PlayingMusic()) {
-//                 SDL_Delay(100);  // Wait until the current music finishes
-//             }
-//             Mix_FreeMusic(music);  // Free the music resource
-//         }
-//     }
-
-//     Mix_CloseAudio();
-//     SDL_Quit();
-// }
-
 // Add an audio file to the playlist
 void Playlist::addAudioFile(const std::shared_ptr<File>& audioFile) {
     std::string audioFileName = audioFile->getFileName();
@@ -115,34 +80,61 @@ void Playlist::displayAudioFiles() const {
     }
 }
 
-// Play the playlist using SDL2
-void Playlist::play() {
+// The function that will be run on a separate thread to play the playlist
+void Playlist::playOnThread() {
     if (audioFiles.empty()) {
         std::cerr << "The playlist is empty!" << std::endl;
         return;
     }
 
-    // if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-    //     std::cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
-    //     return;
-    // }
-
-    // if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-    //     std::cerr << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << std::endl;
-    //     SDL_Quit();
-    //     return;
-    // }
-
     for (const auto& audioFile : audioFiles) {
-        // std::cout << "Playing: " << audioFile->getFileName() << std::endl;
+        if (stopRequested) break;  // Check if we should stop
+
         Mix_Music* music = Mix_LoadMUS(audioFile->getFilePath().c_str());
         if (Mix_PlayMusic(music, 1) == -1) {
             std::cerr << "Error playing music: " << Mix_GetError() << std::endl;
         }
+
         while (Mix_PlayingMusic()) {
+            if (stopRequested) {
+                Mix_HaltMusic();  // Stop the music if requested
+                break;
+            }
             SDL_Delay(100);  // Wait until the current music finishes
         }
 
         Mix_FreeMusic(music);  // Free the music resource
+
+        if (stopRequested) break;  // Stop if requested
     }
+}
+
+// Public method to play the playlist (starts a separate thread)
+void Playlist::play() {
+    stopRequested = false;  // Reset stop request
+
+    if (playbackThread.joinable()) {
+        playbackThread.join();  // Ensure any previous thread is joined
+    }
+
+    playbackThread = std::thread(&Playlist::playOnThread, this);  // Launch playOnThread in a separate thread
+}
+
+// Method to stop the playlist playback
+void Playlist::requestStop() {
+    stopRequested = true;
+}
+
+// This method ensures that the thread is properly stopped and joined
+void Playlist::stop() {
+    requestStop();
+
+    if (playbackThread.joinable()) {
+        playbackThread.join();  // Wait for the playback thread to finish
+    }
+}
+
+// Destructor to clean up resources
+Playlist::~Playlist() {
+    stop();  // Ensure any running thread is stopped and joined
 }
