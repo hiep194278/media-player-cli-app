@@ -44,5 +44,5 @@ public:
     void showCurrentPlaylist(const std::string& playlistName) const;
 
     // Metadata Management
-    
+    void showFileMetadata() const;
 };

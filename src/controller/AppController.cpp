@@ -59,7 +59,7 @@ void AppController::runApp() {
                 std::cout << "Adjusting volume...\n";
                 break;
             case SHOW_METADATA:
-                std::cout << "Showing metadata of a file...\n";
+                showFileMetadata();
                 break;
             case EDIT_METADATA:
                 std::cout << "Editing metadata...\n";
@@ -297,3 +297,17 @@ const {
         std::cerr << "Playlist not found: " << playlistName << std::endl;
     }
 }
+
+void AppController::showFileMetadata() const {
+    std::filesystem::path filePath = enterRelativePath(); 
+    
+    // Ensure the relative path is valid
+    if (std::filesystem::exists(filePath) && 
+        File::determineFileType(filePath) == FileType::Audio
+    ) {
+        AudioFile audioFile(filePath);
+        audioFile.showMetadata();
+    } else {
+        std::cout << "Invalid folder path!\n";
+    }
+};
