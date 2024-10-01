@@ -23,7 +23,7 @@ public:
     void showMetadata() const;
 
     // Method to update metadata
-    void updateMetadata(const std::string& title, const std::string& artist, const std::string& album);
+    void updateMetadata();
 
 };
 

@@ -45,4 +45,5 @@ public:
 
     // Metadata Management
     void showFileMetadata() const;
+    void updateFileMetadata() const;
 };

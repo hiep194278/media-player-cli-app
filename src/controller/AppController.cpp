@@ -62,7 +62,7 @@ void AppController::runApp() {
                 showFileMetadata();
                 break;
             case EDIT_METADATA:
-                std::cout << "Editing metadata...\n";
+                updateFileMetadata();
                 break;   
             case EXIT_APP:
                 std::cout << "Exiting...\n";
@@ -310,4 +310,18 @@ void AppController::showFileMetadata() const {
     } else {
         std::cout << "Invalid audio file path!\n";
     }
+}
+
+void AppController::updateFileMetadata() const {
+    std::filesystem::path filePath = enterRelativePath(); 
+    
+    // Ensure the relative path is valid
+    if (std::filesystem::exists(filePath) && 
+        File::determineFileType(filePath) == FileType::Audio
+    ) {
+        AudioFile audioFile(filePath);
+        audioFile.updateMetadata();
+    } else {
+        std::cout << "Invalid audio file path!\n";
+    }    
 };

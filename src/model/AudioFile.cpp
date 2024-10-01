@@ -36,20 +36,53 @@ void AudioFile::showMetadata() const {
 }
 
 // Update Metadata using TagLib
-void AudioFile::updateMetadata(const std::string& title, const std::string& artist, const std::string& album) {
-    TagLib::FileRef f(filePath.c_str());
+void AudioFile::updateMetadata() {
+    // Load the file using TagLib
+    TagLib::FileRef file(filePath.c_str());
 
-    if(!f.isNull() && f.tag()) {
-        TagLib::Tag *tag = f.tag();
+    if (!file.isNull() && file.tag()) {
+        TagLib::Tag *tag = file.tag();
         
-        tag->setTitle(title);
-        tag->setArtist(artist);
-        tag->setAlbum(album);
-        
+        // Input new metadata from the user
+        std::string input;
+        int intInput;
+
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), 
+            '\n');
+
+        std::cout << "Enter new Title: ";
+        std::getline(std::cin, input);
+        tag->setTitle(input);
+
+        std::cout << "Enter new Artist: ";
+        std::getline(std::cin, input);
+        tag->setArtist(input);
+
+        std::cout << "Enter new Album: ";
+        std::getline(std::cin, input);
+        tag->setAlbum(input);
+
+        std::cout << "Enter new Year: ";
+        std::cin >> intInput;
+        tag->setYear(intInput);
+        std::cin.ignore();  // Ignore newline left in the buffer
+
+        std::cout << "Enter new Track: ";
+        std::cin >> intInput;
+        tag->setTrack(intInput);
+        std::cin.ignore();  // Ignore newline left in the buffer
+
+        std::cout << "Enter new Genre: ";
+        std::getline(std::cin, input);
+        tag->setGenre(input);
+
         // Save the updated metadata back to the file
-        f.save();
-        std::cout << "Metadata updated successfully!" << std::endl;
+        if (file.save()) {
+            std::cout << "Metadata updated successfully.\n";
+        } else {
+            std::cout << "Failed to update metadata.\n";
+        }
     } else {
-        std::cout << "Unable to update metadata for: " << filePath << std::endl;
+        std::cerr << "Error: Could not open file or read metadata.\n";
     }
 }
