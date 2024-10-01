@@ -308,6 +308,6 @@ void AppController::showFileMetadata() const {
         AudioFile audioFile(filePath);
         audioFile.showMetadata();
     } else {
-        std::cout << "Invalid folder path!\n";
+        std::cout << "Invalid audio file path!\n";
     }
 };
