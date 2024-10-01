@@ -46,11 +46,11 @@ void AppController::runApp() {
             case DELETE_PLAYLIST:
                 deletePlaylist();
                 break;
-            case START_PLAYLIST:
-                std::cout << "Starting a playlist...\n";
-                break;
             case EDIT_PLAYLIST_VIEW:
                 enterEditPlaylistView();
+                break;
+            case START_PLAYLIST:
+                std::cout << "Starting a playlist...\n";
                 break;
             case ENTER_MUSIC_CONTROL_MODE:
                 std::cout << "Entering control mode...\n";
@@ -87,8 +87,8 @@ void AppController::displayMenu() const {
     std::cout << ALL_PLAYLISTS << ". All playlists\n";
     std::cout << CREATE_PLAYLIST << ". Create a playlist\n";
     std::cout << DELETE_PLAYLIST << ". Delete a playlist\n";
-    std::cout << START_PLAYLIST << ". Start a playlist\n";
     std::cout << EDIT_PLAYLIST_VIEW << ". Enter playlist edit view\n";
+    std::cout << START_PLAYLIST << ". Start a playlist\n";
     std::cout << ENTER_MUSIC_CONTROL_MODE << ". Enter music control view\n";
     std::cout << ADJUST_VOLUME << ". Adjust volume\n";
     std::cout << SHOW_METADATA << ". Show metadata of a file\n";
