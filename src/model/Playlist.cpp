@@ -81,7 +81,8 @@ void Playlist::displayAudioFiles() const {
 }
 
 void Playlist::play() {
-    Mix_Music* music = Mix_LoadMUS(audioFiles[currentTrack]->getFilePath().c_str());
+    music = Mix_LoadMUS(audioFiles[currentTrack]->getFilePath().c_str());
+    
     if (!music) {
         std::cout << "Can't load music: " << Mix_GetError() << std::endl;
         Mix_CloseAudio();
@@ -127,7 +128,6 @@ void Playlist::onMusicFinished() {
 }
 
 void Playlist::getTimeAndDuration() {
-    Mix_Music* music = Mix_LoadMUS(audioFiles[currentTrack]->getFilePath().c_str());
     std::cout << "Current song: " << audioFiles[currentTrack]->getFileName() << std::endl;
-    std::cout << "Time/Duration: " << static_cast<int>(Mix_GetMusicPosition(music)) << "/" << static_cast<int>(Mix_MusicDuration(music)) << std::endl;
+    std::cout << "Time/Duration: " << Mix_GetMusicPosition(music) << "/" << Mix_MusicDuration(music) << std::endl;
 };

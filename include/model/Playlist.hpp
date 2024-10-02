@@ -6,6 +6,8 @@
 #include "AudioFile.hpp"
 #include <thread>
 #include <memory>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
 class Playlist {
 private:
@@ -13,6 +15,7 @@ private:
     std::vector<std::shared_ptr<File>> audioFiles;  // Collection of
                                                          // audio files
     unsigned int currentTrack;
+    Mix_Music* music;
 
 public:
     // Static pointer to the currently playing playlist for the callback
