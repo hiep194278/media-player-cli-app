@@ -4,13 +4,23 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 
+// Initialize the static instance pointer
+std::shared_ptr<Playlist> Playlist::currentPlaylist = nullptr;
+bool Playlist::isPlaying = false;
+// bool Playlist::isExiting = false;
+
 // Constructor
-Playlist::Playlist(const std::string& name) : name(name) {}
+Playlist::Playlist(const std::string& name) : name(name), currentTrack(0) {}
 
 // Get the playlist name
 std::string Playlist::getName() const {
     return name;
 }
+
+// Check if playlist is empty
+bool Playlist::isEmpty() const {
+    return audioFiles.empty();
+};
 
 // Add an audio file to the playlist
 void Playlist::addAudioFile(const std::shared_ptr<File>& audioFile) {
@@ -58,16 +68,6 @@ void Playlist::removeAudioFile(const std::string& fileName) {
     }
 }
 
-// // Load audio file using SDL2 Mixer (helper method)
-// bool Playlist::loadAudioFile(const std::string& filePath) {
-//     Mix_Music* music = Mix_LoadMUS(filePath.c_str());
-//     if (!music) {
-//         std::cerr << "Failed to load music: " << filePath << " SDL Error: " << Mix_GetError() << std::endl;
-//         return false;
-//     }
-//     return true;
-// }
-
 std::vector<std::shared_ptr<File>> Playlist::getAudioFiles() const {
     return audioFiles;
 };
@@ -80,61 +80,54 @@ void Playlist::displayAudioFiles() const {
     }
 }
 
-// The function that will be run on a separate thread to play the playlist
-void Playlist::playOnThread() {
-    if (audioFiles.empty()) {
-        std::cerr << "The playlist is empty!" << std::endl;
+void Playlist::play() {
+    Mix_Music* music = Mix_LoadMUS(audioFiles[currentTrack]->getFilePath().c_str());
+    if (!music) {
+        std::cout << "Can't load music: " << Mix_GetError() << std::endl;
+        Mix_CloseAudio();
+        SDL_Quit();
         return;
     }
+    
+    // std::cout << "Current track: " << name << std::endl;
+    // std::cout << "Playing: " << audioFiles[currentTrack]->getFileName() << std::endl;
 
-    for (const auto& audioFile : audioFiles) {
-        if (stopRequested) break;  // Check if we should stop
+    if (Mix_PlayMusic(music, 0) == -1) {  // Play the music once
+        std::cout << "Can't play music: " << Mix_GetError() << std::endl;
+    } 
 
-        Mix_Music* music = Mix_LoadMUS(audioFile->getFilePath().c_str());
-        if (Mix_PlayMusic(music, 1) == -1) {
-            std::cerr << "Error playing music: " << Mix_GetError() << std::endl;
-        }
+    // Set the callback for when the music finishes
+    Mix_HookMusicFinished(onMusicFinished);
+}
 
-        while (Mix_PlayingMusic()) {
-            if (stopRequested) {
-                Mix_HaltMusic();  // Stop the music if requested
-                break;
-            }
-            SDL_Delay(100);  // Wait until the current music finishes
-        }
+// Move the next song
+void Playlist::next() {
+    currentTrack = (currentTrack + 1) % audioFiles.size();
+    std::cout << "Playing: " << audioFiles[currentTrack]->getFileName() << std::endl;
+    play();
+}
 
-        Mix_FreeMusic(music);  // Free the music resource
+// Move the previous song
+void Playlist::prev() {
+    currentTrack = (currentTrack - 1 + audioFiles.size()) % audioFiles.size();
+    std::cout << "Playing: " << audioFiles[currentTrack]->getFileName() << std::endl;
+    play();
+}
 
-        if (stopRequested) break;  // Stop if requested
+
+// Static callback function when music finishes
+void Playlist::onMusicFinished() {
+    if (currentPlaylist) {
+        currentPlaylist->currentTrack = (currentPlaylist->currentTrack + 1) % currentPlaylist->audioFiles.size();
+        // std::cout << "\nNext track: " << currentPlaylist->audioFiles[currentPlaylist->currentTrack]->getFileName() << std::endl;
+        currentPlaylist->play();
+    } else {
+        std::cout << "Null pointer" << std::endl;
     }
 }
 
-// Public method to play the playlist (starts a separate thread)
-void Playlist::play() {
-    stopRequested = false;  // Reset stop request
-
-    if (playbackThread.joinable()) {
-        playbackThread.join();  // Ensure any previous thread is joined
-    }
-
-    playbackThread = std::thread(&Playlist::playOnThread, this);  // Launch playOnThread in a separate thread
-}
-
-// Method to stop the playlist playback
-void Playlist::requestStop() {
-    stopRequested = true;
-}
-
-// This method ensures that the thread is properly stopped and joined
-void Playlist::stop() {
-    requestStop();
-
-    if (playbackThread.joinable()) {
-        playbackThread.join();  // Wait for the playback thread to finish
-    }
-}
-
-// Destructor to clean up resources
-Playlist::~Playlist() {
-    stop();  // Ensure any running thread is stopped and joined
-}
+void Playlist::getTimeAndDuration() {
+    Mix_Music* music = Mix_LoadMUS(audioFiles[currentTrack]->getFilePath().c_str());
+    std::cout << "Current song: " << audioFiles[currentTrack]->getFileName() << std::endl;
+    std::cout << "Time/Duration: " << static_cast<int>(Mix_GetMusicPosition(music)) << "/" << static_cast<int>(Mix_MusicDuration(music)) << std::endl;
+};

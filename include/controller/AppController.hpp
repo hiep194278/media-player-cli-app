@@ -21,7 +21,7 @@ private:
     std::filesystem::path currentWorkingDir;
     std::vector<std::shared_ptr<Playlist>> playlists;  // Collection of 
                                                        // playlists
-    std::shared_ptr<Playlist> currentRunningPlaylist;
+    // std::shared_ptr<Playlist> currentRunningPlaylist;
 
 public:
     AppController(const std::filesystem::path& currentPath);
@@ -50,4 +50,8 @@ public:
 
     // Playing music
     void startPlaylist();
+
+    // Music control view
+    void enterMusicControlView();
+    void displayMusicControlViewMenu();
 };
