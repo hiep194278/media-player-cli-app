@@ -13,7 +13,7 @@ class Playlist {
 private:
     std::string name;  // Name of the playlist
     std::vector<std::shared_ptr<File>> audioFiles;  // Collection of
-                                                         // audio files
+                                                    // audio files
     unsigned int currentTrack;
     Mix_Music* music;
 

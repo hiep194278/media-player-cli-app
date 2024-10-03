@@ -142,6 +142,7 @@ void Playlist::getTimeAndDuration() {
 void Playlist::increaseVolume() {
     currentVolume = std::min(currentVolume + 10, MIX_MAX_VOLUME);
     isMuted = false;
+    std::cout << "Volume increased to " << currentVolume << std::endl;
     Mix_VolumeMusic(currentVolume);
 }
 
@@ -149,6 +150,7 @@ void Playlist::decreaseVolume() {
     currentVolume = std::max(currentVolume - 10, 0);
     if (currentVolume == 0)
         isMuted = true;
+    std::cout << "Volume decreased to " << currentVolume << std::endl;
 
     Mix_VolumeMusic(currentVolume);
 }
@@ -156,9 +158,11 @@ void Playlist::decreaseVolume() {
 void Playlist::muteOrUnmute() {
     if (isMuted) {
         Mix_VolumeMusic(currentVolume);
+        std::cout << "Volume unmuted! Current volume: " << currentVolume << std::endl;
         isMuted = false;
     } else {
         Mix_VolumeMusic(0);
         isMuted = true;
+        std::cout << "Volume muted!" << std::endl;
     }
 }

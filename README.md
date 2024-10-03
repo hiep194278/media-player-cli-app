@@ -8,6 +8,8 @@ This project is a C++ media player application. The following instructions will 
 - **Git**: For cloning the repository.
 - **g++**: The GNU C++ compiler.
 - **Make**: For building the project.
+- **SDL2 library**: For playing audio files.
+- **Taglib library**: For viewing and modifying file metadata.
 
 ### Install Prerequisites 
 
@@ -16,6 +18,9 @@ Run the following commands to install Git, g++, and Make if they are not already
 ```bash
 sudo apt update
 sudo apt install git g++ make
+sudo apt-get install libsdl2-2.0-0
+sudo apt-get install libsdl2-dev libsdl2-mixer-dev
+sudo apt-get install libtag1-dev
 ```
 
 ## Setup Instructions
