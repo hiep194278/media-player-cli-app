@@ -14,6 +14,19 @@
 #define EXIT_APP 12
 
 #include "Playlist.hpp"
+#include "PaginationView.hpp"
+#include "AudioFile.hpp"
+#include "VideoFile.hpp"
+#include "Folder.hpp"
+#include "EditPlaylistView.hpp"
+#include "MusicControlView.hpp"
+#include "VolumeView.hpp"
+
+#include <iostream>
+#include <limits>
+#include <algorithm>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include <filesystem>
 
 class AppController {

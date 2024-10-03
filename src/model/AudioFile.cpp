@@ -1,5 +1,4 @@
 #include "AudioFile.hpp"
-#include <iostream>
 
 // Constructor for AudioFile class
 AudioFile::AudioFile(const std::filesystem::path& path) : File(path) {}

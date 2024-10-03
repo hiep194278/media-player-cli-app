@@ -2,6 +2,8 @@
 
 #include "File.hpp"
 
+#include <iostream>
+
 /**
  * @brief Represents a folder in the media player application.
  */

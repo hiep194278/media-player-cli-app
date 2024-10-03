@@ -1,5 +1,4 @@
 #include "Folder.hpp"
-#include <iostream>
 
 // Constructor for Folder class
 Folder::Folder(const std::filesystem::path& path) : File(path) {}

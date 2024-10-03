@@ -1,7 +1,4 @@
 #include "MusicControlView.hpp"
-#include "Playlist.hpp"
-
-#include <iostream>
 
 void enterMusicControlView() {
     if (Playlist::currentPlaylist == nullptr) {

@@ -1,25 +1,21 @@
-#include "PaginationView.hpp"
-#include "File.hpp"
-#include "AudioFile.hpp"
-#include "VideoFile.hpp"
-#include "Folder.hpp"
-#include <iostream>
-#include <algorithm>
-#include <iomanip>
+#ifdef PAGINATION_H
 
 // Constructor
-PaginationView::PaginationView(const std::vector<std::shared_ptr<File>>& files, int itemsPerPage)
-    : files(files), currentPage(0), itemsPerPage(itemsPerPage) {}
+template <typename T>
+PaginationView<T>::PaginationView(const std::vector<std::shared_ptr<T>>& items, int itemsPerPage)
+    : items(items), currentPage(0), itemsPerPage(itemsPerPage) {}
 
 // Method to calculate the total number of pages
-int PaginationView::calculateTotalPages() const {
-    return (files.size() + itemsPerPage - 1) / itemsPerPage;  // Ceiling division
+template <typename T>
+int PaginationView<T>::calculateTotalPages() const {
+    return (items.size() + itemsPerPage - 1) / itemsPerPage;  // Ceiling division
 }
 
-// Method to display a specific page of files
-void PaginationView::displayPage() {
+// Method to display a specific page of items
+template <typename T>
+void PaginationView<T>::displayPage() {
     int start = currentPage * itemsPerPage;
-    int numItems = static_cast<int>(files.size());
+    int numItems = static_cast<int>(items.size());
     int end = std::min(numItems, start + itemsPerPage);
 
     std::cout << "Page " << currentPage + 1 << " of " 
@@ -31,12 +27,13 @@ void PaginationView::displayPage() {
 
     for (int i = start; i < end; ++i) {
         std::cout << i + 1 << ". ";
-        files[i]->displayInfo();
+        items[i]->displayInfo();
     }
 }
 
 // Main method to handle pagination and file viewing
-void PaginationView::handlePagination() {
+template <typename T>
+void PaginationView<T>::handlePagination() {
     char choice;
 
     while (true) {
@@ -70,3 +67,5 @@ void PaginationView::handlePagination() {
         }
     }
 }
+
+#endif

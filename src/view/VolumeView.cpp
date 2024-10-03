@@ -1,7 +1,4 @@
 #include "VolumeView.hpp"
-#include "Playlist.hpp"
-
-#include <iostream>
 
 void enterAdjustVolumeView() {
     char choice;

@@ -1,17 +1,4 @@
 #include "AppController.hpp"
-#include "PaginationView.hpp"
-#include "AudioFile.hpp"
-#include "VideoFile.hpp"
-#include "Folder.hpp"
-#include "EditPlaylistView.hpp"
-#include "MusicControlView.hpp"
-#include "VolumeView.hpp"
-
-#include <iostream>
-#include <limits>
-#include <algorithm>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
 
 AppController::AppController(const std::filesystem::path& currentPath) 
 : currentWorkingDir(currentPath) {};
@@ -127,7 +114,7 @@ void AppController::viewFilesAndSubFolders() const {
             }
         }
 
-        PaginationView paginationView(files);
+        PaginationView<File> paginationView(files);
         paginationView.handlePagination();
     } else {
         std::cout << "Invalid folder path!\n";
@@ -212,10 +199,14 @@ void AppController::deletePlaylist() {
 
 // List all playlists
 void AppController::listPlaylists() const {
-    std::cout << "Available playlists:" << std::endl;
-    for (const auto& playlist : playlists) {
-        std::cout << " - " << playlist->getName() << std::endl;
+    if (playlists.empty()) {
+        std::cout << "No playlists available." << std::endl;
+        return;
     }
+
+    // Create a PaginationView for the playlists
+    PaginationView<Playlist> playlistPagination(playlists);  // 5 items per page
+    playlistPagination.handlePagination();  // Start the pagination view
 }
 
 // Get a playlist by name

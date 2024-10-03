@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
+#include <iostream>
 
 /**
  * @brief Represents an audio file in the media player application.

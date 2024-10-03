@@ -1,5 +1,4 @@
 #include "File.hpp"
-#include <iostream>
 
 // Constructor for File class
 File::File(const std::filesystem::path& path) : filePath(path) {}

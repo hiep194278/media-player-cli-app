@@ -1,8 +1,4 @@
 #include "Playlist.hpp"
-#include <iostream>
-#include <algorithm>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
 
 // Initialize the static instance pointer
 std::shared_ptr<Playlist> Playlist::currentPlaylist = nullptr;
@@ -84,6 +80,10 @@ void Playlist::displayAudioFiles() const {
     for (const auto& audioFile : audioFiles) {
         std::cout << " - " << audioFile->getFileName() << std::endl;
     }
+}
+
+void Playlist::displayInfo() const {
+    std::cout << "[Playlist] " << name << std::endl;
 }
 
 void Playlist::play() {

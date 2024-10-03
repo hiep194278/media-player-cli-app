@@ -1,6 +1,4 @@
 #include "EditPlaylistView.hpp"
-#include "PaginationView.hpp"
-#include <iostream>
 
 void enterEditPlaylistView(std::filesystem::path& currentWorkingDir, 
 std::vector<std::shared_ptr<Playlist>>& playlists) {
@@ -46,7 +44,7 @@ std::vector<std::shared_ptr<Playlist>>& playlists) {
                 std::cin >> fileName;
                 playlist->removeAudioFile(fileName);
             } else if (choice == 's' || choice == 'S') {
-                PaginationView paginationView(playlist->getAudioFiles());
+                PaginationView<File> paginationView(playlist->getAudioFiles());
                 paginationView.handlePagination();
             } else if (choice == 'e' || choice == 'E') {
                 std::cout << "Exiting the Edit Playlist View.\n";

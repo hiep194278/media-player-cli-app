@@ -1,5 +1,4 @@
 #include "VideoFile.hpp"
-#include <iostream>
 
 // Constructor for VideoFile class
 VideoFile::VideoFile(const std::filesystem::path& path) : File(path) {}

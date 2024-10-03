@@ -1,13 +1,16 @@
 #pragma once
 
+#include "AudioFile.hpp"
+
 #include <vector>
 #include <memory>
 #include <string>
-#include "AudioFile.hpp"
 #include <thread>
 #include <memory>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
+#include <iostream>
+#include <algorithm>
 
 class Playlist {
 private:
@@ -41,6 +44,8 @@ public:
 
     // Display all audio files in the playlist
     void displayAudioFiles() const;
+
+    void displayInfo() const;
 
     // Play the playlist
     void play();
