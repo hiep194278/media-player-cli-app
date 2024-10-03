@@ -54,4 +54,7 @@ public:
     // Music control view
     void enterMusicControlView();
     void displayMusicControlViewMenu();
+
+    // Enter Adjust Volume View
+    void enterAdjustVolumeView();
 };

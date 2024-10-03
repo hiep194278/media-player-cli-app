@@ -58,7 +58,7 @@ void AppController::runApp() {
                 enterMusicControlView();
                 break;
             case ADJUST_VOLUME:
-                std::cout << "Adjusting volume...\n";
+                enterAdjustVolumeView();
                 break;
             case SHOW_METADATA:
                 showFileMetadata();
@@ -340,6 +340,7 @@ void AppController::startPlaylist() {
 
             Playlist::currentPlaylist = playlist;
             Playlist::isPlaying = true;
+            Playlist::stopRequested = false;
             Playlist::currentPlaylist->play(); 
             std::cout << "Playing playlist: " << playlistName << std::endl;
             return;
@@ -375,12 +376,17 @@ void AppController::enterMusicControlView() {
             }
         } else if (choice == 'v' || choice == 'V') {
             Playlist::currentPlaylist->getTimeAndDuration();
+        } else if (choice == 'c' || choice == 'C') {
+            Mix_HaltMusic();
+            Mix_FreeMusic(Playlist::currentPlaylist->getMusic());
+            Playlist::stopRequested = true;
+            Playlist::currentPlaylist = nullptr;
+            Playlist::isPlaying = false;
         } else if (choice == 'e' || choice == 'E') {
             break;
         } else {
             std::cout << "Invalid option! Please try again." << std::endl;
         }
-
     }
 }
 
@@ -394,6 +400,36 @@ void AppController::displayMusicControlViewMenu() {
     std::cout << "[p] Play previous song\n";
     std::cout << "[r] Resume/Pause playlist\n";
     std::cout << "[v] View time/duration\n";
+    std::cout << "[c] Close the playlist playback\n";
     std::cout << "[e] Exit music control view\n";
     std::cout << "Enter choice: ";
+};
+
+void AppController::enterAdjustVolumeView() {
+    char choice;
+
+    while (true)
+    {
+        std::cout << "\nOptions: \n";
+        std::cout << "[i] Increase volume\n";
+        std::cout << "[d] Decrease volume\n";
+        std::cout << "[m] Mute/Unmute\n";
+        std::cout << "[e] Exit adjust volume view\n";
+        std::cout << "Enter choice: ";
+        std::cin >> choice;
+
+        // Handle user input
+        if (choice == 'i' || choice == 'I') {
+            Playlist::currentPlaylist->increaseVolume();
+        } else if (choice == 'd' || choice == 'D') {
+            Playlist::currentPlaylist->decreaseVolume();
+        } else if (choice == 'm' || choice == 'M') {
+            Playlist::currentPlaylist->muteOrUnmute();
+        } else if (choice == 'e' || choice == 'E') {
+            break;
+        } else {
+            std::cout << "Invalid option! Please try again." << std::endl;
+        }
+    }
+    
 };

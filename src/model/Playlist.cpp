@@ -7,14 +7,20 @@
 // Initialize the static instance pointer
 std::shared_ptr<Playlist> Playlist::currentPlaylist = nullptr;
 bool Playlist::isPlaying = false;
-// bool Playlist::isExiting = false;
+bool Playlist::stopRequested = true;
+int Playlist::currentVolume = MIX_MAX_VOLUME / 2;
+bool Playlist::isMuted = false;
 
 // Constructor
-Playlist::Playlist(const std::string& name) : name(name), currentTrack(0) {}
+Playlist::Playlist(const std::string& name) : name(name), currentTrack(0), music(nullptr) {}
 
 // Get the playlist name
 std::string Playlist::getName() const {
     return name;
+}
+
+Mix_Music* Playlist::getMusic() const {
+    return music;
 }
 
 // Check if playlist is empty
@@ -89,9 +95,6 @@ void Playlist::play() {
         SDL_Quit();
         return;
     }
-    
-    // std::cout << "Current track: " << name << std::endl;
-    // std::cout << "Playing: " << audioFiles[currentTrack]->getFileName() << std::endl;
 
     if (Mix_PlayMusic(music, 0) == -1) {  // Play the music once
         std::cout << "Can't play music: " << Mix_GetError() << std::endl;
@@ -118,6 +121,10 @@ void Playlist::prev() {
 
 // Static callback function when music finishes
 void Playlist::onMusicFinished() {
+    if (stopRequested) {
+        return;  // Prevent playing the next track if the program is quitting
+    }
+
     if (currentPlaylist) {
         currentPlaylist->currentTrack = (currentPlaylist->currentTrack + 1) % currentPlaylist->audioFiles.size();
         // std::cout << "\nNext track: " << currentPlaylist->audioFiles[currentPlaylist->currentTrack]->getFileName() << std::endl;
@@ -131,3 +138,27 @@ void Playlist::getTimeAndDuration() {
     std::cout << "Current song: " << audioFiles[currentTrack]->getFileName() << std::endl;
     std::cout << "Time/Duration: " << Mix_GetMusicPosition(music) << "/" << Mix_MusicDuration(music) << std::endl;
 };
+
+void Playlist::increaseVolume() {
+    currentVolume = std::min(currentVolume + 10, MIX_MAX_VOLUME);
+    isMuted = false;
+    Mix_VolumeMusic(currentVolume);
+}
+
+void Playlist::decreaseVolume() {
+    currentVolume = std::max(currentVolume - 10, 0);
+    if (currentVolume == 0)
+        isMuted = true;
+
+    Mix_VolumeMusic(currentVolume);
+}
+
+void Playlist::muteOrUnmute() {
+    if (isMuted) {
+        Mix_VolumeMusic(currentVolume);
+        isMuted = false;
+    } else {
+        Mix_VolumeMusic(0);
+        isMuted = true;
+    }
+}

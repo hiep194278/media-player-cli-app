@@ -21,11 +21,15 @@ public:
     // Static pointer to the currently playing playlist for the callback
     static std::shared_ptr<Playlist> currentPlaylist;
     static bool isPlaying;
+    static bool stopRequested;
+    static int currentVolume;
+    static bool isMuted;
 
     Playlist(const std::string& name);
 
     // Get the playlist name
     std::string getName() const;
+    Mix_Music* getMusic() const;
 
     // Check if playlist is empty
     bool isEmpty() const;
@@ -46,4 +50,8 @@ public:
 
     // Static callback function when music finishes
     static void onMusicFinished();
+
+    static void increaseVolume();
+    static void decreaseVolume();
+    static void muteOrUnmute();
 };
