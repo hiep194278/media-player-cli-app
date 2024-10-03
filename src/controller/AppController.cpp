@@ -49,16 +49,16 @@ void AppController::runApp() {
                 deletePlaylist();
                 break;
             case EDIT_PLAYLIST_VIEW:
-                enterEditPlaylistView();
+                enterEditPlaylistView();     // 1
                 break;
             case START_PLAYLIST:
                 startPlaylist();
                 break;
             case ENTER_MUSIC_CONTROL_MODE:
-                enterMusicControlView();
+                enterMusicControlView();     // 2
                 break;
             case ADJUST_VOLUME:
-                enterAdjustVolumeView();
+                enterAdjustVolumeView();     // 3
                 break;
             case SHOW_METADATA:
                 showFileMetadata();
@@ -382,6 +382,7 @@ void AppController::enterMusicControlView() {
             Playlist::stopRequested = true;
             Playlist::currentPlaylist = nullptr;
             Playlist::isPlaying = false;
+            break;
         } else if (choice == 'e' || choice == 'E') {
             break;
         } else {

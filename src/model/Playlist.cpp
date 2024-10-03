@@ -87,6 +87,11 @@ void Playlist::displayAudioFiles() const {
 }
 
 void Playlist::play() {
+    if (currentPlaylist == nullptr) {
+        std::cout << "No playlist is playing!" << std::endl;
+        return;
+    }
+
     music = Mix_LoadMUS(audioFiles[currentTrack]->getFilePath().c_str());
     
     if (!music) {
