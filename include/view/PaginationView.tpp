@@ -1,5 +1,3 @@
-#ifdef PAGINATION_H
-
 // Constructor
 template <typename T>
 PaginationView<T>::PaginationView(const std::vector<std::shared_ptr<T>>& items, int itemsPerPage)
@@ -67,5 +65,3 @@ void PaginationView<T>::handlePagination() {
         }
     }
 }
-
-#endif

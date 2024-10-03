@@ -1,5 +1,4 @@
-#ifndef PAGINATION_H
-#define PAGINATION_H
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -27,5 +26,3 @@ private:
 };
 
 #include "PaginationView.tpp"
-
-#endif
