@@ -21,13 +21,13 @@ private:
     std::filesystem::path currentWorkingDir;
     std::vector<std::shared_ptr<Playlist>> playlists;  // Collection of 
                                                        // playlists
-    // std::shared_ptr<Playlist> currentRunningPlaylist;
 
 public:
     AppController(const std::filesystem::path& currentPath);
 
-    // File Management
     void runApp();
+
+    // File Management
     void displayMenu() const;
     void viewFilesAndSubFolders() const;
     void changeWorkingDir();
@@ -39,7 +39,6 @@ public:
     void deletePlaylist();
     void listPlaylists() const;
     std::shared_ptr<Playlist> getPlaylist(const std::string& playlistName);
-    void enterEditPlaylistView();
 
     // Show all audio files in the current playlist
     void showCurrentPlaylist(const std::string& playlistName) const;
@@ -50,11 +49,4 @@ public:
 
     // Playing music
     void startPlaylist();
-
-    // Music control view
-    void enterMusicControlView();
-    void displayMusicControlViewMenu();
-
-    // Enter Adjust Volume View
-    void enterAdjustVolumeView();
 };

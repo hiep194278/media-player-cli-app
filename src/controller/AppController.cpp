@@ -3,6 +3,10 @@
 #include "AudioFile.hpp"
 #include "VideoFile.hpp"
 #include "Folder.hpp"
+#include "EditPlaylistView.hpp"
+#include "MusicControlView.hpp"
+#include "VolumeView.hpp"
+
 #include <iostream>
 #include <limits>
 #include <algorithm>
@@ -49,7 +53,7 @@ void AppController::runApp() {
                 deletePlaylist();
                 break;
             case EDIT_PLAYLIST_VIEW:
-                enterEditPlaylistView();     // 1
+                enterEditPlaylistView(currentWorkingDir, playlists);
                 break;
             case START_PLAYLIST:
                 startPlaylist();
@@ -226,65 +230,6 @@ const std::string& playlistName) {
     return nullptr;
 }
 
-// Enter Editing Playlist View
-void AppController::enterEditPlaylistView() {
-    std::string playlistName = enterPlaylistName(); 
-    
-    std::shared_ptr<Playlist> playlist = getPlaylist(playlistName);
-
-    if (playlist != nullptr) {
-        char choice;
-        while (true)
-        {
-            std::cout << "\nCurrent working directory: " 
-                      << currentWorkingDir;
-            std::cout << "\nPlaylist name: " << playlistName;
-            // Display navigation options
-            std::cout << "\nOptions: \n";
-            std::cout << "[a] Add an audio file to the playlist\n";
-            std::cout << "[r] Remove a file from the playlist\n";
-            std::cout << "[s] Show all files in the playlist\n";
-            std::cout << "[e] Exit edit playlist view\n";
-            std::cout << "Enter choice: ";
-            std::cin >> choice;
-
-            // Handle user input
-            if (choice == 'a' || choice == 'A') {
-                std::string relativePath;
-                std::cout << "Enter the relative path to the audio file: ";
-                std::cin >> relativePath;
-
-                // Resolve the relative path to the full path based on the 
-                // current working directory
-                std::filesystem::path fullPath = currentWorkingDir / relativePath;
-
-                if (std::filesystem::exists(fullPath) && 
-                    File::determineFileType(fullPath) == FileType::Audio
-                ) {
-                    auto audioFile = std::make_shared<AudioFile>(fullPath);
-                    playlist->addAudioFile(audioFile);
-                } else {
-                    std::cout << "Invalid audio file at path: " << fullPath << '\n';
-                }
-            } else if (choice == 'r' || choice == 'R') {
-                std::string fileName;
-                std::cout << "Enter the name of the audio file to delete: ";
-                std::cin >> fileName;
-                playlist->removeAudioFile(fileName);
-            } else if (choice == 's' || choice == 'S') {
-                PaginationView paginationView(playlist->getAudioFiles());
-                paginationView.handlePagination();
-            } else if (choice == 'e' || choice == 'E') {
-                std::cout << "Exiting the Edit Playlist View.\n";
-                return;
-            } else {
-                std::cout << "Invalid option! Please try again." << std::endl;
-            }
-
-        }
-    }
-}
-
 // Show the audio files in a specific playlist
 void AppController::showCurrentPlaylist(const std::string& playlistName) 
 const {
@@ -348,89 +293,3 @@ void AppController::startPlaylist() {
     }
     std::cerr << "Playlist not found!" << std::endl;
 }
-
-void AppController::enterMusicControlView() {
-    if (Playlist::currentPlaylist == nullptr) {
-        std::cout << "No playlist is currently playing" << std::endl;
-        return;
-    }
-
-    char choice;
-    while (true)
-    {
-        displayMusicControlViewMenu();
-        std::cin >> choice;
-
-        // Handle user input
-        if (choice == 'n' || choice == 'N') {
-            Playlist::currentPlaylist->next();
-        } else if (choice == 'p' || choice == 'P') {
-            Playlist::currentPlaylist->prev();
-        } else if (choice == 'r' || choice == 'R') {
-            if (Playlist::isPlaying == true) {
-                Mix_PauseMusic(); 
-                Playlist::isPlaying = false;
-            } else {
-                Mix_ResumeMusic();
-                Playlist::isPlaying = true;
-            }
-        } else if (choice == 'v' || choice == 'V') {
-            Playlist::currentPlaylist->getTimeAndDuration();
-        } else if (choice == 'c' || choice == 'C') {
-            Mix_HaltMusic();
-            Mix_FreeMusic(Playlist::currentPlaylist->getMusic());
-            Playlist::stopRequested = true;
-            Playlist::currentPlaylist = nullptr;
-            Playlist::isPlaying = false;
-            break;
-        } else if (choice == 'e' || choice == 'E') {
-            break;
-        } else {
-            std::cout << "Invalid option! Please try again." << std::endl;
-        }
-    }
-}
-
-void AppController::displayMusicControlViewMenu() {
-    std::cout << "\nCurrent playlist: " 
-                << Playlist::currentPlaylist->getName();
-
-    // Display navigation options
-    std::cout << "\nOptions: \n";
-    std::cout << "[n] Play next song\n";
-    std::cout << "[p] Play previous song\n";
-    std::cout << "[r] Resume/Pause playlist\n";
-    std::cout << "[v] View time/duration\n";
-    std::cout << "[c] Close the playlist playback\n";
-    std::cout << "[e] Exit music control view\n";
-    std::cout << "Enter choice: ";
-};
-
-void AppController::enterAdjustVolumeView() {
-    char choice;
-
-    while (true)
-    {
-        std::cout << "\nOptions: \n";
-        std::cout << "[i] Increase volume\n";
-        std::cout << "[d] Decrease volume\n";
-        std::cout << "[m] Mute/Unmute\n";
-        std::cout << "[e] Exit adjust volume view\n";
-        std::cout << "Enter choice: ";
-        std::cin >> choice;
-
-        // Handle user input
-        if (choice == 'i' || choice == 'I') {
-            Playlist::currentPlaylist->increaseVolume();
-        } else if (choice == 'd' || choice == 'D') {
-            Playlist::currentPlaylist->decreaseVolume();
-        } else if (choice == 'm' || choice == 'M') {
-            Playlist::currentPlaylist->muteOrUnmute();
-        } else if (choice == 'e' || choice == 'E') {
-            break;
-        } else {
-            std::cout << "Invalid option! Please try again." << std::endl;
-        }
-    }
-    
-};
