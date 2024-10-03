@@ -382,6 +382,7 @@ void AppController::enterMusicControlView() {
             Playlist::stopRequested = true;
             Playlist::currentPlaylist = nullptr;
             Playlist::isPlaying = false;
+            break;
         } else if (choice == 'e' || choice == 'E') {
             break;
         } else {
